@@ -1,0 +1,10 @@
+/flake.nix
+/flake.lock
+/.envrc
+
+
+fetch.sh
+
+# Added by cargo
+
+/target
