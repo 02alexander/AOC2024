@@ -1,10 +1,7 @@
-/flake.nix
-/flake.lock
 /.envrc
-
+/.direnv
+/.vscode
 
 fetch.sh
 
-# Added by cargo
-
-/target
+input
