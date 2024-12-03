@@ -2,30 +2,21 @@
 
 import sys
 import os
+import numpy as np
 from collections import defaultdict
+
+sys.path.append("../")
+from util import occ_map, get_ints
 
 content = open("input").read()
 groups = content.split('\n\n')
 lines = content.splitlines()
 
-l = []
-r = []
+arr = np.array(get_ints(lines))
 
-for line in lines:
-    a, b = map(int, line.split())
-    l.append(a)
-    r.append(b)
+l = list(arr[:,0])
+r = list(arr[:,1])
 
-sm = 0
-l = sorted(l)
-r = sorted(r)
-for i in range(len(l)):
-    sm += abs(l[i] - r[i])
-print(f'part 1: {sm}')
+print(sum(abs(a - b) for a,b in zip(sorted(l), sorted(r))))
 
-sm = 0
-for i in range(len(l)):
-    a = l[i]
-    sm += a*r.count(a)
-
-print(f'part 2: {sm}')
+print(sum(a*list(r).count(a) for a,b in zip(sorted(l), sorted(r))))
