@@ -15,54 +15,108 @@ content = open("input").read()
 lines = content.splitlines()
 groups = content.split('\n\n')
 
-page_ordering = get_ints(groups[0].splitlines())
+cur_pos = None
+cur_dir = 3
+mp = set()
+for (r, line) in enumerate(lines):
+    for (col, c) in  enumerate(line):
+        if c == "#":
+            mp.add((r, col))
+        if c == "^":
+            cur_pos = (r,col)
 
-ordering = defaultdict(set)
-for (a,b) in page_ordering:
-    ordering[a].add(b)
+start_pos = cur_pos
+dirs = [[0, 1], [1, 0], [0, -1], [-1, 0]]
 
-def after(ordering, c, numbs):
-    numbs = set(numbs)
-    return len(set(ordering[c]).intersection(numbs))
+visited = set()
+visited_with_dir = set()
 
-def is_ordered(ordering, numbs):
-    for i in reversed(range(len(numbs))):
-        e = numbs[i]
-        if len(set(numbs[:i]).intersection(ordering[e])) > 0:
-            return False
-    return True
+width = len(lines[0])
+height = len(lines)
+print(f'{width=}')
+print(f'{height=}')
 
-def order(ordering, numbs):
-    while True:
-        done = True
+possible_loops = set()
 
-        for (i, c) in enumerate(numbs):
-            must_after = ordering[c]
-            break_outer = False
-            for k in range(0,i):
-                if numbs[k] in must_after:
-                    numbs[i], numbs[k] = numbs[k], numbs[i]
-                    done = False
-                    break_outer = True
-                    break
-
-            if break_outer:
-                break
+def would_loop(visited_with_dir, mp, cur_pos, cur_dir):
+    global dirs
+    visited_with_dir = set(visited_with_dir)
+    cur_pos = list(cur_pos)
+    path = list()
+    while 0 <= cur_pos[0] < height and 0 <= cur_pos[1] < width:
         
-        if done:
+        if (tuple(cur_pos), cur_dir) in visited_with_dir:
+            return True
+
+        next_pos = [
+            cur_pos[0] + dirs[cur_dir][0],
+            cur_pos[1] + dirs[cur_dir][1]
+        ]
+        if tuple(next_pos) in mp:
+            cur_dir = (cur_dir +1 ) % 4
+            continue
+        if not(0 <= next_pos[0] < height and 0 <= next_pos[1] < width):
             break
 
+        
 
-sm = 0
-for line in groups[1].splitlines():
-    numbs = list(map(int,line.split(',')))
-    if not is_ordered(ordering, numbs):
+        visited_with_dir.add((tuple(cur_pos), cur_dir))
+        path.append(cur_pos)
+        
+        cur_pos = next_pos
+    return False
 
-        order(ordering, numbs)
-        print(is_ordered(ordering, numbs))
-        print(numbs)
-        print(numbs[len(numbs)//2])
-        sm += numbs[len(numbs)//2]
-        #5213
 
-print(sm)
+while 0 <= cur_pos[0] < height and 0 <= cur_pos[1] < width:
+
+    next_pos = [
+        cur_pos[0] + dirs[cur_dir][0],
+        cur_pos[1] + dirs[cur_dir][1]
+    ]
+
+    if tuple(next_pos) in mp:
+        cur_dir = (cur_dir +1 ) % 4
+        continue
+
+    visited.add(tuple(cur_pos))
+
+
+    new_mp = set(mp)
+    new_mp.add(tuple(next_pos))
+
+
+    if not(0 <= next_pos[0] < height and 0 <= next_pos[1] < width):
+        break
+
+    if tuple(next_pos) not in visited and would_loop(visited_with_dir, new_mp, cur_pos, cur_dir):
+        possible_loops.add(tuple(next_pos))
+
+    visited_with_dir.add((tuple(cur_pos), cur_dir))
+    # print((tuple(cur_pos), cur_dir))
+    
+    cur_pos = next_pos
+
+#1818
+#2108
+    
+for row in range(height):
+    l = ""
+    for col in range(width):
+        if (row,col) == tuple(start_pos):
+            l += "^"
+        elif (row, col) in mp:
+            l += "#"
+        elif (row, col) in possible_loops:
+            l += "O"
+        elif (row, col) in visited:
+            l += "X"
+        else:
+            l += "."
+    print(l)
+
+
+print(tuple(start_pos) in possible_loops)
+print(len(possible_loops.intersection(mp)))
+print(len(possible_loops))
+# print(possible_loops)
+print(len(visited))
