@@ -3,6 +3,8 @@
 /.vscode
 
 fetch.sh
+*.txt
+test
 
 input
 __pycache__
