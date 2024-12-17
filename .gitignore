@@ -5,6 +5,7 @@
 fetch.sh
 *.txt
 test
+test*
 
 input
 __pycache__

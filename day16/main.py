@@ -12,7 +12,7 @@ from heapq import heapify, heappop, heappush
 sys.path.append("../")
 from util import occ_map, get_ints, DIRS, slice_dir
 
-content = open("input").read()
+content = open("mm").read()
 lines = content.splitlines()
 groups = content.split('\n\n')
 
