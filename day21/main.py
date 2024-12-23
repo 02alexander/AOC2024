@@ -88,11 +88,12 @@ def shortest(keypad_start_idx, start, end):
 
 import time
 
+start_time = time.time()
+
 lines = content.splitlines()
 groups = content.split('\n\n')
 
 
-start_time = time.time()
 
 keypad1_arr = [
     ['7', '8', '9'],

@@ -2,7 +2,6 @@
 
 import sys
 from collections import deque
-
 sys.path.append("../")
 from util import get_ints
 
@@ -55,7 +54,6 @@ def run_with_a(regs, prog, a):
     nr = dict(regs)
     nr['A'] = a
     return run_prog(nr, prog)
-
 
 def brute(regs, prog, wanted_out):
     nxt = deque([])
